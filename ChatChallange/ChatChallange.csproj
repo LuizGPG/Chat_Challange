@@ -7,6 +7,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ChatChallange.Domain\**" />
+    <Compile Remove="ChatChallange.Repository\**" />
+    <Compile Remove="ChatChallange.Service\**" />
+    <Content Remove="ChatChallange.Domain\**" />
+    <Content Remove="ChatChallange.Repository\**" />
+    <Content Remove="ChatChallange.Service\**" />
+    <EmbeddedResource Remove="ChatChallange.Domain\**" />
+    <EmbeddedResource Remove="ChatChallange.Repository\**" />
+    <EmbeddedResource Remove="ChatChallange.Service\**" />
+    <None Remove="ChatChallange.Domain\**" />
+    <None Remove="ChatChallange.Repository\**" />
+    <None Remove="ChatChallange.Service\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="ChatChallange.Service\ChatChallange.Service.csproj" />
   </ItemGroup>
 
