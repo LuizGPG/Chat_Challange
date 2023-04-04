@@ -17,8 +17,7 @@ namespace ChatChallange.Service
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
-                    var userId = userChat.UserId.ToString();
-                    channel.QueueDeclare(queue: "chatQueue_" + userId,
+                    channel.QueueDeclare(queue: "chatQueue_" + userChat.User,
                                                      durable: false,
                                                      exclusive: false,
                                                      autoDelete: false,
@@ -27,7 +26,7 @@ namespace ChatChallange.Service
                     var message = JsonSerializer.Serialize(userChat);
                     var body = Encoding.UTF8.GetBytes(message);
 
-                    channel.BasicPublish(exchange: "", routingKey: "chatQueue_" + userId, basicProperties: null, body: body);
+                    channel.BasicPublish(exchange: "", routingKey: "chatQueue_" + userChat.User, basicProperties: null, body: body);
                     return true;
 
                 }
@@ -40,18 +39,17 @@ namespace ChatChallange.Service
 
         }
 
-        public UserChat ConsumeAnwserByUser(string userId)
+        public UserChat ConsumeAnwserByUser(string user)
         {
-            //UserChat user = new UserChat();
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                var data = channel.BasicGet("chatQueue_" + "1", true);
+                var data = channel.BasicGet("chatQueue_" + user, true);
                 var body = data.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                var user = JsonSerializer.Deserialize<UserChat>(message);
-                return user;
+                var userChat = JsonSerializer.Deserialize<UserChat>(message);
+                return userChat;
             }
         }
 

@@ -6,10 +6,9 @@ namespace ChatChallange.Hubs
 {
     public class ChatHub : Hub
     {
+        private const string Command = "/stock=";
         private readonly IStooqService _stooqService;
         private readonly IUserChatService _userChatService;
-
-        protected IHubContext<ChatHub> _context;
 
         public ChatHub(IStooqService stooqService, IUserChatService userChatService)
         {
@@ -17,10 +16,15 @@ namespace ChatChallange.Hubs
             _userChatService = userChatService;
         }
 
-        public async Task SendMessage(string user, string mensagem)
+        public async Task SendMessage(string user, string message)
         {
-            var anwser = await _stooqService.CallEndpointStooq(mensagem);
-            await _userChatService.SaveMessage(1 /*USER ID*/, mensagem, anwser);
+            var anwser = string.Empty;
+            if (message.Contains(Command))
+            {
+                message = message.Substring(Command.Length);
+                anwser = await _stooqService.CallEndpointStooq(message);
+            }
+            await _userChatService.SaveMessage(user, message, anwser);
 
             await GetUserChatQueue(user);
         }

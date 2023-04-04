@@ -7,7 +7,7 @@ namespace ChatChallange.Service
 {
     public class StooqService : IStooqService
     {
-        public async Task<string> CallEndpointStooq(string mensagem)
+        public async Task<string> CallEndpointStooq(string message)
         {
             try
             {
@@ -15,7 +15,7 @@ namespace ChatChallange.Service
                 {
                     client.BaseAddress = new Uri("https://stooq.com/");
 
-                    HttpResponseMessage response = await client.GetAsync("q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=csv");
+                    HttpResponseMessage response = await client.GetAsync("q/l/?s="+ message + "&f=sd2t2ohlcv&h&e=csv");
 
                     if (response.IsSuccessStatusCode)
                     {
