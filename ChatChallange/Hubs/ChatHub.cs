@@ -1,6 +1,7 @@
 ﻿using ChatChallange.Domain.Entities;
 using ChatChallange.Service.Interface;
 using Microsoft.AspNetCore.SignalR;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChatChallange.Hubs
@@ -52,7 +53,7 @@ namespace ChatChallange.Hubs
         {
             var userChats = await _userChatService.GetAll();
 
-            foreach (var userChat in userChats)
+            foreach (var userChat in userChats.OrderBy(d => d.Data))
             {
                 await SendMessageToChat(userChat);
             }
