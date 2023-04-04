@@ -8,6 +8,7 @@ namespace ChatChallange.Service
     public class StooqService : IStooqService
     {
         private const string NotFound = "Não foi encontrado valor para o codigo enviado!";
+        private const string Url = "https://stooq.com/";
         public async Task<string> CallEndpointStooq(string message)
         {
             var value = await CallApi(message);
@@ -28,7 +29,7 @@ namespace ChatChallange.Service
             {
                 using (var client = new HttpClient())
                 {
-                    client.BaseAddress = new Uri("https://stooq.com/");
+                    client.BaseAddress = new Uri(Url);
 
                     HttpResponseMessage response = await client.GetAsync("q/l/?s=" + message + "&f=sd2t2ohlcv&h&e=csv");
 
@@ -39,7 +40,7 @@ namespace ChatChallange.Service
                     }
                     else
                     {
-                        throw new Exception($"Failed to call API: {response.ReasonPhrase}");
+                        throw new Exception($"Failed to call"+Url+": {response.ReasonPhrase}");
                     }
                 }
             }
