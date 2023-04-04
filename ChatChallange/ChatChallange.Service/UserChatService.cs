@@ -33,7 +33,6 @@ namespace ChatChallange.Service
         {
             try
             {
-
                 var userChat = new UserChat(userId, message, anwser);
                 await _userChatRepository.SaveChat(userChat);
 

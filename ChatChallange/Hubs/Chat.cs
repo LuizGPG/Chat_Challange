@@ -1,7 +1,8 @@
-﻿using ChatChallange.Service.Interface;
+﻿using ChatChallange.Domain.Model;
+using ChatChallange.Service.Interface;
 using Microsoft.AspNetCore.SignalR;
 using System;
-using System.Net.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ChatChallange.Hubs
@@ -10,12 +11,55 @@ namespace ChatChallange.Hubs
     {
         private readonly IStooqService _stooqService;
         private readonly IUserChatService _userChatService;
+        private readonly IDictionary<string, UserConnection> _connections;
 
-        public Chat(IStooqService stooqService, IUserChatService userChatService)
+        public Chat(IStooqService stooqService, IUserChatService userChatService, IDictionary<string, UserConnection> connections)
         {
             _stooqService = stooqService;
             _userChatService = userChatService;
+            _connections = connections;
         }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            if (_connections.TryGetValue(Context.ConnectionId, out UserConnection userConnection))
+            {
+                _connections.Remove(Context.ConnectionId);
+                Clients.Group(userConnection.Room).SendAsync("ReceiveMessage", _botUser, $"{userConnection.User} has left");
+                SendUsersConnected(userConnection.Room);
+            }
+
+            return base.OnDisconnectedAsync(exception);
+        }
+
+        public async Task JoinRoom(UserConnection userConnection)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, userConnection.Room);
+
+            _connections[Context.ConnectionId] = userConnection;
+
+            await Clients.Group(userConnection.Room).SendAsync("ReceiveMessage", _botUser, $"{userConnection.User} has joined {userConnection.Room}");
+
+            await SendUsersConnected(userConnection.Room);
+        }
+
+        public async Task SendMessage(string message)
+        {
+            if (_connections.TryGetValue(Context.ConnectionId, out UserConnection userConnection))
+            {
+                await Clients.Group(userConnection.Room).SendAsync("ReceiveMessage", userConnection.User, message);
+            }
+        }
+
+        public Task SendUsersConnected(string room)
+        {
+            var users = _connections.Values
+                .Where(c => c.Room == room)
+                .Select(c => c.User);
+
+            return Clients.Group(room).SendAsync("UsersInRoom", users);
+        }
+
 
         public async Task SendMessage(string user, string mensagem)
         {
@@ -30,6 +74,7 @@ namespace ChatChallange.Hubs
             var userChat = _userChatService.GetUserChatQueue(user);
             await Clients.All.SendAsync("ReceiveMessage", "User", userChat.Message);
             await Clients.All.SendAsync("ReceiveMessage", "Chat Bot", userChat.Anwser);
+            await Clients.User(user).SendAsync("ReceiveMessage", "Chat Bot", userChat.Anwser);
         }
 
         //fazer metodo que fica escutando fila e valida se a mensagem foi para o usuario em questao
