@@ -9,13 +9,25 @@ namespace ChatChallange.Service
     {
         public async Task<string> CallEndpointStooq(string message)
         {
+            var value = await CallApi(message);
+            var values = value.Split(',');
+            var cotationValue = values[7];
+
+            if(cotationValue != "N/D")
+                return $"A cotação da {message} é de US$ {values[11]} por ação";
+
+            return "Não foi encontrado valor para o codigo enviado!";
+        }
+
+        private static async Task<string> CallApi(string message)
+        {
             try
             {
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri("https://stooq.com/");
 
-                    HttpResponseMessage response = await client.GetAsync("q/l/?s="+ message + "&f=sd2t2ohlcv&h&e=csv");
+                    HttpResponseMessage response = await client.GetAsync("q/l/?s=" + message + "&f=sd2t2ohlcv&h&e=csv");
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -33,7 +45,6 @@ namespace ChatChallange.Service
                 Console.WriteLine(ex.Message);
                 throw ex;
             }
-            
         }
     }
 }
