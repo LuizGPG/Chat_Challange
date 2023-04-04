@@ -3,6 +3,7 @@ using ChatChallange.Service.Interface;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ChatChallange.Hubs
@@ -25,7 +26,7 @@ namespace ChatChallange.Hubs
             if (_connections.TryGetValue(Context.ConnectionId, out UserConnection userConnection))
             {
                 _connections.Remove(Context.ConnectionId);
-                Clients.Group(userConnection.Room).SendAsync("ReceiveMessage", _botUser, $"{userConnection.User} has left");
+                Clients.Group(userConnection.Room).SendAsync("ReceiveMessage", "Chat Bot", $"{userConnection.User} has left");
                 SendUsersConnected(userConnection.Room);
             }
 
@@ -38,7 +39,7 @@ namespace ChatChallange.Hubs
 
             _connections[Context.ConnectionId] = userConnection;
 
-            await Clients.Group(userConnection.Room).SendAsync("ReceiveMessage", _botUser, $"{userConnection.User} has joined {userConnection.Room}");
+            await Clients.Group(userConnection.Room).SendAsync("ReceiveMessage", "Chat Bot", $"{userConnection.User} has joined {userConnection.Room}");
 
             await SendUsersConnected(userConnection.Room);
         }
