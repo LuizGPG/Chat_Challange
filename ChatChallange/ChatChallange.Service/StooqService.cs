@@ -7,7 +7,22 @@ namespace ChatChallange.Service
 {
     public class StooqService : IStooqService
     {
-        public async Task<string> CallEndpointStooq(string mensagem)
+        private const string NotFound = "Não foi encontrado valor para o codigo enviado!";
+        public async Task<string> CallEndpointStooq(string message)
+        {
+            var value = await CallApi(message);
+            var values = value.Split(',');
+            var cotationValue = values[11];
+
+            if (cotationValue != "N/D")
+            {
+                return $"A cotação da {message} é de US$ {cotationValue} por ação.";
+            }
+
+            return NotFound;
+        }
+
+        private static async Task<string> CallApi(string message)
         {
             try
             {
@@ -15,7 +30,7 @@ namespace ChatChallange.Service
                 {
                     client.BaseAddress = new Uri("https://stooq.com/");
 
-                    HttpResponseMessage response = await client.GetAsync("q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=csv");
+                    HttpResponseMessage response = await client.GetAsync("q/l/?s=" + message + "&f=sd2t2ohlcv&h&e=csv");
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -33,7 +48,6 @@ namespace ChatChallange.Service
                 Console.WriteLine(ex.Message);
                 throw ex;
             }
-            
         }
     }
 }

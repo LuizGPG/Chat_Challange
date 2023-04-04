@@ -18,9 +18,9 @@ namespace ChatChallange.Service
             _queueService = queueService;
         }
 
-        public async Task<ICollection<UserChat>> GetAllByUserId(int userId)
+        public async Task<ICollection<UserChat>> GetAll()
         {
-            return await _userChatRepository.GetAllByUserId(userId);
+            return await _userChatRepository.GetAll();
         }
 
         public UserChat GetUserChatQueue(string user)
@@ -29,14 +29,16 @@ namespace ChatChallange.Service
             return userChat;
         }
 
-        public async Task SaveMessage(int userId, string message, string anwser)
+        public async Task SaveMessage(UserChat userChat)
         {
             try
             {
-                var userChat = new UserChat(userId, message, anwser);
                 await _userChatRepository.SaveChat(userChat);
 
-                _queueService.InsertAnwser(userChat);
+                if (userChat.Anwser != string.Empty)
+                {
+                    _queueService.InsertAnwser(userChat);
+                }
             }
             catch (Exception ex)
             {

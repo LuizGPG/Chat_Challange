@@ -1,0 +1,52 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+@inject SignInManager<IdentityUser> SignInManager
+
+<div class="text-center">
+</div>
+
+<div class="container">
+    <div id="mensagemContainer"></div>
+    <input type="text" id="messageInput">
+    <button onclick="sendMessage()">Enviar</button>
+    <input hidden asp-for="UserName" />
+</div>
+<head>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.min.js"></script>
+</head>
+@section Scripts {
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.on("ReceiveMessage", function (user, message) {
+            var mensagemHtml = "<strong>" + user + ":</strong> " + message + "<br />";
+            var mensagemContainer = document.getElementById("mensagemContainer");
+            mensagemContainer.innerHTML += mensagemHtml;
+        });
+
+        connection.start().then(function () {
+            connection.invoke("LoadChat").catch(function (err) {
+                return console.error(err.toString());
+            });
+            console.log("Conectado ao hub do SignalR");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+
+        function sendMessage() {
+            var mensagem = document.getElementById("messageInput").value;
+            var user = "@Model.UserName";
+
+            connection.invoke("SendMessage", user, mensagem).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            document.getElementById("messageInput").value = "";
+        }
+    </script>
+}

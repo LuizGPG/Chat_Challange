@@ -35,8 +35,8 @@ namespace ChatChallange.Repository.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("User")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
