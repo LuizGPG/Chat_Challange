@@ -1,0 +1,45 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+</div>
+
+<div class="container">
+    <input type="text" id="messageInput">
+    <button onclick="sendMessage()">Enviar</button>
+</div>
+<head>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.min.js"></script>
+</head>
+@section Scripts {
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.on("ReceiveMessage", function (user, message) {
+            // faça algo com a mensagem recebida, como exibir em um elemento HTML
+            console.log(user + ": " + message);
+        });
+
+        connection.start().then(function () {
+            console.log("Conectado ao hub do SignalR");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        function sendMessage() {
+            var mensagem = document.getElementById("messageInput").value;
+            var user = "usuário";
+
+            connection.invoke("SendMessage", user, mensagem).catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            // limpar o campo de entrada da mensagem
+            document.getElementById("messageInput").value = "";
+        }
+    </script>
+}

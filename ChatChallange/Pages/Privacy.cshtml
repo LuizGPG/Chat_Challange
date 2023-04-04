@@ -1,0 +1,55 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+<script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+
+<script>
+    "use strict";
+
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/chathub")
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+    $("#send").disabled = true;
+
+    connection.on("ReceiveMessage", function (user, message) {
+        var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        var li = $("<li></li>").text(user + ": " + msg);
+        li.addClass("list-group-item");
+        $("#messagesList").append(li);
+    });
+
+    connection.start().then(function () {
+        $("#send").disabled = false;
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    $("#send").on("click", function (event) {
+        var user = $("#usuario").val();
+        var message = $("#mensagem").val();
+        connection.invoke("SendMessage", user, message).catch(function (err) {
+            return console.error(err.toString());
+        });
+        event.preventDefault();
+    });
+</script>
+
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.signalr/2.4.2/jquery.signalr.min.js"></script>
+    <script src="/signalr/hubs">
+
+    var connection = $.hubConnection();
+    var chatHub = connection.createHubProxy('chatHub');
+    chatHub.on('receiveMessage', function (userName, message) {
+        // Faça algo com a mensagem recebida
+    });
+    connection.start();
+
+    chatHub.invoke('sendMessage', userName, message);
+    </script>*@
