@@ -1,10 +1,8 @@
 ﻿using ChatChallange.Domain.Entities;
 using ChatChallange.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatChallange.Repository
@@ -18,10 +16,9 @@ namespace ChatChallange.Repository
             _applicationContext = applicationContext;
         }
 
-        public async Task<ICollection<UserChat>> GetAllByUserId(int userId)
+        public async Task<ICollection<UserChat>> GetAll()
         {
-            var messages =  await _applicationContext.UsersChat.Where(d => d.UserId == userId).ToListAsync();
-            return messages.OrderByDescending(d => d.Data).ToList();
+            return await _applicationContext.UsersChat.Take(50).OrderByDescending(c => c.Data).ToListAsync();
         }
 
         public async Task SaveChat(UserChat userChat)

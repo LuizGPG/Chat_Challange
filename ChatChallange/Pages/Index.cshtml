@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
 }
+@inject SignInManager<IdentityUser> SignInManager
 
 <div class="text-center">
 </div>
@@ -11,6 +12,7 @@
     <input type="text" id="messageInput">
     <button onclick="sendMessage()">Enviar</button>
     <div id="mensagemContainer"></div>
+    <input hidden asp-for="UserName" />
 </div>
 <head>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -27,20 +29,23 @@
         });
 
         connection.start().then(function () {
+            connection.invoke("LoadChat").catch(function (err) {
+                return console.error(err.toString());
+            });
             console.log("Conectado ao hub do SignalR");
         }).catch(function (err) {
             return console.error(err.toString());
         });
 
+
         function sendMessage() {
             var mensagem = document.getElementById("messageInput").value;
-            var user = "usuário";
+            var user = "@Model.UserName";
 
             connection.invoke("SendMessage", user, mensagem).catch(function (err) {
                 return console.error(err.toString());
             });
 
-            // limpar o campo de entrada da mensagem
             document.getElementById("messageInput").value = "";
         }
     </script>

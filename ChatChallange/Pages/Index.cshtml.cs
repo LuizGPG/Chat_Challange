@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ChatChallange.Hubs;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Chat_Challange.Pages
@@ -17,15 +14,15 @@ namespace Chat_Challange.Pages
             _logger = logger;
         }
 
+        public string UserName { get; set; }
+
         public void OnGet()
         {
+            if (User != default)
+            {
+                UserName = User.Identity.Name;
+            }
 
-        }
-
-
-        public void OnPost()
-        {
-            var teste = "";
         }
     }
 }

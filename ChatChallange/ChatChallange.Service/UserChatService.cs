@@ -18,9 +18,9 @@ namespace ChatChallange.Service
             _queueService = queueService;
         }
 
-        public async Task<ICollection<UserChat>> GetAllByUserId(int userId)
+        public async Task<ICollection<UserChat>> GetAll()
         {
-            return await _userChatRepository.GetAllByUserId(userId);
+            return await _userChatRepository.GetAll();
         }
 
         public UserChat GetUserChatQueue(string user)
