@@ -7,16 +7,19 @@ namespace ChatChallange.Service
 {
     public class StooqService : IStooqService
     {
+        private const string NotFound = "Não foi encontrado valor para o codigo enviado!";
         public async Task<string> CallEndpointStooq(string message)
         {
             var value = await CallApi(message);
             var values = value.Split(',');
-            var cotationValue = values[7];
+            var cotationValue = values[11];
 
-            if(cotationValue != "N/D")
-                return $"A cotação da {message} é de US$ {values[11]} por ação";
+            if (cotationValue != "N/D")
+            {
+                return $"A cotação da {message} é de US$ {cotationValue} por ação.";
+            }
 
-            return "Não foi encontrado valor para o codigo enviado!";
+            return NotFound;
         }
 
         private static async Task<string> CallApi(string message)

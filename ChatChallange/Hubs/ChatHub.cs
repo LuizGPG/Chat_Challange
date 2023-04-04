@@ -1,4 +1,5 @@
-﻿using ChatChallange.Service.Interface;
+﻿using ChatChallange.Domain.Entities;
+using ChatChallange.Service.Interface;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
@@ -7,6 +8,9 @@ namespace ChatChallange.Hubs
     public class ChatHub : Hub
     {
         private const string Command = "/stock=";
+        private const string Method = "ReceiveMessage";
+        private const string ChatBot = "Chat Bot";
+
         private readonly IStooqService _stooqService;
         private readonly IUserChatService _userChatService;
 
@@ -24,29 +28,41 @@ namespace ChatChallange.Hubs
                 message = message.Substring(Command.Length);
                 anwser = await _stooqService.CallEndpointStooq(message);
             }
-            await _userChatService.SaveMessage(user, message, anwser);
+            
+            var userChat = new UserChat(user, message, anwser);
+            await _userChatService.SaveMessage(userChat);
 
-            await GetUserChatQueue(user);
+            if (userChat.Anwser != string.Empty)
+            {
+                await GetUserChatQueue(user);
+            }
+            else
+            {
+                await SendMessageToChat(userChat);
+            }
         }
 
         private async Task GetUserChatQueue(string user)
         {
             var userChat = _userChatService.GetUserChatQueue(user);
-            await Clients.All.SendAsync("ReceiveMessage", "User", userChat.Message);
-            await Clients.All.SendAsync("ReceiveMessage", "Chat Bot", userChat.Anwser);
-            await Clients.User(user).SendAsync("ReceiveMessage", "Chat Bot", userChat.Anwser);
+            await SendMessageToChat(userChat);
         }
-
 
         public async Task LoadChat()
         {
-            var messages = await _userChatService.GetAll();
+            var userChats = await _userChatService.GetAll();
 
-            foreach (var message in messages)
+            foreach (var userChat in userChats)
             {
-                await Clients.All.SendAsync("ReceiveMessage", "User", message.Message);
-                await Clients.All.SendAsync("ReceiveMessage", "Chat Bot", message.Anwser);
+                await SendMessageToChat(userChat);
             }
+        }
+
+        private async Task SendMessageToChat(UserChat userChat)
+        {
+            await Clients.All.SendAsync(Method, userChat.User, userChat.Message);
+            if (userChat.Anwser != string.Empty)
+                await Clients.All.SendAsync(Method, ChatBot, userChat.Anwser);
         }
     }
 }

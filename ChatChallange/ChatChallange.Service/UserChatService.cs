@@ -29,14 +29,16 @@ namespace ChatChallange.Service
             return userChat;
         }
 
-        public async Task SaveMessage(string user, string message, string anwser)
+        public async Task SaveMessage(UserChat userChat)
         {
             try
             {
-                var userChat = new UserChat(user, message, anwser);
                 await _userChatRepository.SaveChat(userChat);
 
-                _queueService.InsertAnwser(userChat);
+                if (userChat.Anwser != string.Empty)
+                {
+                    _queueService.InsertAnwser(userChat);
+                }
             }
             catch (Exception ex)
             {

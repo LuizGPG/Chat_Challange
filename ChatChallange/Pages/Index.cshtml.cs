@@ -1,7 +1,4 @@
-﻿using ChatChallange.Hubs;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chat_Challange.Pages
 {

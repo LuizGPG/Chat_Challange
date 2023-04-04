@@ -18,7 +18,7 @@ namespace ChatChallange.Repository
 
         public async Task<ICollection<UserChat>> GetAll()
         {
-            return await _applicationContext.UsersChat.Take(50).OrderByDescending(c => c.Data).ToListAsync();
+            return await _applicationContext.UsersChat.Take(50).OrderBy(c => c.Data).ToListAsync();
         }
 
         public async Task SaveChat(UserChat userChat)
