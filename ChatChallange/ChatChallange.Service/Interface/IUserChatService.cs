@@ -11,5 +11,6 @@ namespace ChatChallange.Service.Interface
     {
         Task SaveMessage(int userId, string message, string anwser);
         Task<ICollection<UserChat>> GetAllByUserId(int userId);
+        UserChat GetUserChatQueue(string user);
     }
 }

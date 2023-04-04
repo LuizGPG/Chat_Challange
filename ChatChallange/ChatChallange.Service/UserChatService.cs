@@ -23,10 +23,17 @@ namespace ChatChallange.Service
             return await _userChatRepository.GetAllByUserId(userId);
         }
 
+        public UserChat GetUserChatQueue(string user)
+        {
+            var userChat = _queueService.ConsumeAnwserByUser(user);
+            return userChat;
+        }
+
         public async Task SaveMessage(int userId, string message, string anwser)
         {
             try
             {
+
                 var userChat = new UserChat(userId, message, anwser);
                 await _userChatRepository.SaveChat(userChat);
 

@@ -17,14 +17,19 @@ namespace ChatChallange.Hubs
             _userChatService = userChatService;
         }
 
-        public async Task SendMessage(string usuario, string mensagem)
+        public async Task SendMessage(string user, string mensagem)
         {
             var anwser = await _stooqService.CallEndpointStooq(mensagem);
-            /*remover apos fazer leitura diretamente da fila*/
-            await Clients.All.SendAsync("ReceiveMessage", usuario, mensagem);
-            await Clients.All.SendAsync("ReceiveMessage", "Chat Bot", anwser);
-
             await _userChatService.SaveMessage(1 /*USER ID*/,mensagem, anwser);
+
+            await GetUserChatQueue(user);
+        }
+
+        private async Task GetUserChatQueue(string user)
+        {
+            var userChat = _userChatService.GetUserChatQueue(user);
+            await Clients.All.SendAsync("ReceiveMessage", "User", userChat.Message);
+            await Clients.All.SendAsync("ReceiveMessage", "Chat Bot", userChat.Anwser);
         }
 
         //fazer metodo que fica escutando fila e valida se a mensagem foi para o usuario em questao

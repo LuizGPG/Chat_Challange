@@ -21,16 +21,17 @@ namespace ChatChallange.Service
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
-                    channel.QueueDeclare(queue: "chatQueue",
-                                         durable: false,
-                                         exclusive: false,
-                                         autoDelete: false,
-                                         arguments: null);
+                    var userId = userChat.UserId.ToString();
+                    channel.QueueDeclare(queue: "chatQueue_" + userId,
+                                                     durable: false,
+                                                     exclusive: false,
+                                                     autoDelete: false,
+                                                     arguments: null);
 
                     var message = JsonSerializer.Serialize(userChat);
                     var body = Encoding.UTF8.GetBytes(message);
 
-                    channel.BasicPublish(exchange: "", routingKey: "chatQueue", basicProperties: null, body: body);
+                    channel.BasicPublish(exchange: "", routingKey: "chatQueue_" + userId, basicProperties: null, body: body);
                     return true;
 
                 }
@@ -45,37 +46,18 @@ namespace ChatChallange.Service
 
         public UserChat ConsumeAnwserByUser(string userId)
         {
-            var user = new UserChat();
+            //UserChat user = new UserChat();
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "chatQueue", durable: false, exclusive: false,autoDelete: false, arguments: null);
-
-                var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>
-                {
-                    try
-                    {
-                        var body = ea.Body.ToArray();
-                        var message = Encoding.UTF8.GetString(body);
-                        user = JsonSerializer.Deserialize<UserChat>(message);
-
-                        channel.BasicAck(ea.DeliveryTag, false);
-                    }
-                    catch (Exception ex)
-                    {
-                        //Logger
-                        channel.BasicNack(ea.DeliveryTag, false, true);
-                    }
-                };
-                
-                channel.BasicConsume(queue: "chatQueue",
-                                     autoAck: false,
-                                     consumer: consumer);
+                var data = channel.BasicGet("chatQueue_" + "1", true);
+                var body = data.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                var user = JsonSerializer.Deserialize<UserChat>(message);
+                return user;
             }
-
-            return user;
         }
+
     }
 }
