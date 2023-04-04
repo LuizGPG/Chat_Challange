@@ -22,8 +22,8 @@
     <script>
         var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-        connection.on("ReceiveMessage", function (user, message) {
-            var mensagemHtml = "<strong>" + user + ":</strong> " + message + "<br />";
+        connection.on("ReceiveMessage", function (user, message, date) {
+            var mensagemHtml = "<strong>" + user + ":</strong> " + message + " - " + "<i>" + date + "</i>" + "<br />";
             var mensagemContainer = document.getElementById("mensagemContainer");
             mensagemContainer.innerHTML += mensagemHtml;
         });

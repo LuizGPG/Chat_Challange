@@ -61,9 +61,10 @@ namespace ChatChallange.Hubs
 
         private async Task SendMessageToChat(UserChat userChat)
         {
-            await Clients.All.SendAsync(Method, userChat.User, userChat.Message);
+            var formatData = userChat.Data.ToString("HH:mm MM/dd/yyyy");
+            await Clients.All.SendAsync(Method, userChat.User, userChat.Message, formatData);
             if (userChat.Anwser != string.Empty)
-                await Clients.All.SendAsync(Method, ChatBot, userChat.Anwser);
+                await Clients.All.SendAsync(Method, ChatBot, userChat.Anwser, formatData);
         }
     }
 }
