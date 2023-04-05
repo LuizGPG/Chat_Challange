@@ -10,7 +10,7 @@
 
 <div class="container">
     <div id="mensagemContainer"></div>
-    <input type="text" id="messageInput">
+    <input type="text" size="100"  id="messageInput">
     <button onclick="sendMessage()">Enviar</button>
     <input hidden asp-for="UserName" />
 </div>
@@ -22,10 +22,9 @@
     <script>
         var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-        connection.on("ReceiveMessage", function (user, message, date) {
-            var mensagemHtml = "<strong>" + user + ":</strong> " + message + " - " + "<i>" + date + "</i>" + "<br />";
+        connection.on("ReceiveMessage", function (message) {
             var mensagemContainer = document.getElementById("mensagemContainer");
-            mensagemContainer.innerHTML += mensagemHtml;
+            mensagemContainer.innerHTML += message;
         });
 
         connection.start().then(function () {

@@ -1,5 +1,6 @@
 ﻿using ChatChallange.Domain.Entities;
 using ChatChallange.Service.Interface;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
 using System.Text;
@@ -9,6 +10,13 @@ namespace ChatChallange.Service
 {
     public class QueueService : IQueueService
     {
+        private readonly ILogger<QueueService> _logger;
+
+        public QueueService(ILogger<QueueService> logger)
+        {
+            _logger = logger;
+        }
+
         public bool InsertAnwser(UserChat userChat)
         {
             try
@@ -31,9 +39,9 @@ namespace ChatChallange.Service
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                _logger.LogError("Error trying InsertAnwser", ex.Message);
                 throw;
             }
 
@@ -41,15 +49,23 @@ namespace ChatChallange.Service
 
         public UserChat ConsumeAnwserByUser(string user)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
+            try
             {
-                var data = channel.BasicGet("chatQueue_" + user, true);
-                var body = data.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var userChat = JsonSerializer.Deserialize<UserChat>(message);
-                return userChat;
+                var factory = new ConnectionFactory() { HostName = "localhost" };
+                using (var connection = factory.CreateConnection())
+                using (var channel = connection.CreateModel())
+                {
+                    var data = channel.BasicGet("chatQueue_" + user, true);
+                    var body = data.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var userChat = JsonSerializer.Deserialize<UserChat>(message);
+                    return userChat;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error trying ConsumeAnwserByUser", ex.Message);
+                throw;
             }
         }
 
