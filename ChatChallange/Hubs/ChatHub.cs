@@ -59,10 +59,14 @@ namespace ChatChallange.Hubs
             try
             {
                 var userChats = await _userChatService.GetAll();
+
+                var allMessages = "";
                 foreach (var userChat in userChats.OrderBy(d => d.Data))
                 {
-                    await SendMessageToChat(userChat);
+                    allMessages += CreateListOfMessages(userChat);
                 }
+
+                await Clients.All.SendAsync("ReceiveAllMessages", allMessages);
             }
             catch (Exception ex)
             {
@@ -76,6 +80,21 @@ namespace ChatChallange.Hubs
             
             await SendMessageToChat(userChat);
         }
+
+
+        private string CreateListOfMessages(UserChat userChat)
+        {
+            var formatData = userChat.Data.ToString("HH:mm MM/dd/yyyy");
+            var userMessage = FormatUserMessage(userChat, formatData);
+            var anwser = "";
+            if (userChat.Anwser != string.Empty)
+            {
+                anwser = FormatMessageToChatBot(userChat, formatData);
+            }
+
+            return userMessage + anwser;
+        }
+
 
         private async Task SendMessageToChat(UserChat userChat)
         {
