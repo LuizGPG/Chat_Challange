@@ -37,14 +37,16 @@ namespace ChatChallange.Hubs
                 }
 
                 var userChat = new UserChat(user, message, anwser);
-                await _userChatService.SaveMessage(userChat);
+                var sucess = await _userChatService.SaveMessage(userChat);
 
-                if (userChat.Anwser != string.Empty)
+
+                if (userChat.Anwser != string.Empty && sucess)
                 {
                     await GetUserChatQueue(user);
                 }
                 else
                 {
+                    userChat.Anwser = sucess ? userChat.Anwser : "Algo de errado não esta certo com meu serviço!!!";
                     await SendMessageToChat(userChat);
                 }
             }

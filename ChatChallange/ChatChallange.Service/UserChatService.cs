@@ -40,7 +40,7 @@ namespace ChatChallange.Service
             return userChat;
         }
 
-        public async Task SaveMessage(UserChat userChat)
+        public async Task<bool> SaveMessage(UserChat userChat)
         {
             try
             {
@@ -50,10 +50,12 @@ namespace ChatChallange.Service
                 {
                     _queueService.InsertAnwser(userChat);
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error trying SaveMessage", ex.Message);
+                return false;
                 throw;
             }
         }

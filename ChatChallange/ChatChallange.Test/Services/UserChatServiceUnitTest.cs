@@ -73,16 +73,16 @@ namespace ChatChallange.Test.Services
         }
 
         [Test]
-        public void Should_SaveMessage_Exception()
+        public async Task Should_SaveMessage_Exception()
         {
             var userChatMock = UserChatFixture.UserChatFix();
             _userChatRepository.SaveChat(userChatMock).Returns(Task.FromException(new System.Exception()));
             _queueService.InsertAnwser(userChatMock).Returns(true);
 
             var service = new UserChatService(_userChatRepository, _queueService, _logger);
-            var userChat = service.SaveMessage(userChatMock);
+            var userChat = await service.SaveMessage(userChatMock);
 
-            Assert.IsNotNull(userChat.Exception);
+            Assert.False(userChat);
         }
     }
 }
