@@ -6,7 +6,7 @@ namespace ChatChallange.Service.Interface
 {
     public interface IUserChatService
     {
-        Task SaveMessage(UserChat userChat);
+        Task<bool> SaveMessage(UserChat userChat);
         Task<ICollection<UserChat>> GetAll();
         UserChat GetUserChatQueue(string user);
     }

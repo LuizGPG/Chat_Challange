@@ -15,27 +15,20 @@ namespace ChatChallange.Test.Services
         {
             _logger = Substitute.For<ILogger<QueueService>>();
         }
+
         [Test]
-        public void Should_InsertAnwser()
+        public void Should_InsertAnwser_and_ConsumeAnwserByUser()
         {
             var userChat = UserChatFixture.UserChatFix();
             var service = new QueueService(_logger);
 
             var returned = service.InsertAnwser(userChat);
-
             Assert.IsTrue(returned);
-        }
 
-        [Test]
-        public void Should_ConsumeAnwserByUser()
-        {
-            var userChat = UserChatFixture.UserChatFix();
-            var service = new QueueService(_logger);
+            var returnedFromRabbit = service.ConsumeAnwserByUser(userChat.User);
 
-            var returned = service.ConsumeAnwserByUser(userChat.User);
-
-            Assert.IsNotNull(returned);
-            Assert.AreEqual(returned.Message, userChat.Message);
+            Assert.IsNotNull(returnedFromRabbit);
+            Assert.AreEqual(returnedFromRabbit.Message, userChat.Message);
         }
     }
 }
