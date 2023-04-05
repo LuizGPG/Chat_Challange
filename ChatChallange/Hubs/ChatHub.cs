@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatChallange.Hubs
@@ -60,13 +61,13 @@ namespace ChatChallange.Hubs
             {
                 var userChats = await _userChatService.GetAll();
 
-                var allMessages = "";
+                var allMessages = new StringBuilder();
                 foreach (var userChat in userChats.OrderBy(d => d.Data))
                 {
-                    allMessages += CreateListOfMessages(userChat);
+                    allMessages.Append(CreateListOfMessages(userChat));
                 }
 
-                await Clients.All.SendAsync("ReceiveAllMessages", allMessages);
+                await Clients.All.SendAsync("ReceiveAllMessages", allMessages.ToString());
             }
             catch (Exception ex)
             {
