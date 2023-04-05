@@ -27,6 +27,12 @@ Após isso será necessário atualizar a base. Executar os scripts:<br/>
 Agora será necessário instanciar um container para o RabbitMQ. <strong>Obs</strong>: Necessário ter o Docker instalado.<br/><br/>
 <strong>docker run -d --hostname rabbitserver --name rabbitmq-server -p 15672:15672 -p 5672:5672 rabbitmq:3-management</strong><br/>
 
+Com o projeto executando você caira em uma tela de login, caso nao possua conta, necessario registrar uma nova.<br/>
+
+![image](https://user-images.githubusercontent.com/14313148/230154565-63e09533-a488-4ecd-8d93-8549a25835c9.png)
+
+Registre sua conta e após isso faça login.
+
 <h2> Ponderações finais </h2>
 
 Quero agradecer a oportunidade de realizar o teste e o carisma que tiveram na entrevista.
