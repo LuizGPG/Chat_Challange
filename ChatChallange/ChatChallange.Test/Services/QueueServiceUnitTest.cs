@@ -26,7 +26,7 @@ namespace ChatChallange.Test.Services
             var returned = service.ConsumeAnwserByUser(userChat.User);
 
             Assert.IsNotNull(returned);
-            Assert.Equals(returned.Message, userChat.Message);
+            Assert.AreEqual(returned.Message, userChat.Message);
         }
     }
 }

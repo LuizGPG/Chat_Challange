@@ -34,5 +34,30 @@ namespace ChatChallange.Test.Services
 
             Assert.IsNotNull(usersChats);
         }
+
+        [Test]
+        public void Should_GetUserChatQueue()
+        {
+            var userChatMock = UserChatFixture.UserChatFix();
+            _queueService.ConsumeAnwserByUser(userChatMock.User).Returns(userChatMock);
+
+            var service = new UserChatService(_userChatRepository, _queueService);
+            var userChat = service.GetUserChatQueue(userChatMock.User);
+
+            Assert.IsNotNull(userChat);
+        }
+
+        [Test]
+        public void Should_SaveMessage()
+        {
+            var userChatMock = UserChatFixture.UserChatFix();
+            _userChatRepository.SaveChat(userChatMock).Returns(Task.FromResult);
+            _queueService.InsertAnwser(userChatMock).Returns(true);
+
+            var service = new UserChatService(_userChatRepository, _queueService);
+            var userChat = service.SaveMessage(userChatMock);
+
+            Assert.IsNotNull(userChat);
+        }
     }
 }

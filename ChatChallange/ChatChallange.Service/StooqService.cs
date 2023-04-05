@@ -9,6 +9,7 @@ namespace ChatChallange.Service
     {
         private const string NotFound = "Não foi encontrado valor para o codigo enviado!";
         private const string Url = "https://stooq.com/";
+
         public async Task<string> CallEndpointStooq(string message)
         {
             var value = await CallApi(message);
