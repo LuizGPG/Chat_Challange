@@ -33,7 +33,7 @@ namespace ChatChallange.Hubs
             var userChat = new UserChat(user, message, anwser);
             await _userChatService.SaveMessage(userChat);
 
-            if (userChat.Anwser != string.Empty && userChat.Anwser.Contains("A cotação da"))
+            if (userChat.Anwser != string.Empty)
             {
                 await GetUserChatQueue(user);
             }

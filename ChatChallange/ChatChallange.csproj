@@ -10,15 +10,19 @@
     <Compile Remove="ChatChallange.Domain\**" />
     <Compile Remove="ChatChallange.Repository\**" />
     <Compile Remove="ChatChallange.Service\**" />
+    <Compile Remove="ChatChallange.Test\**" />
     <Content Remove="ChatChallange.Domain\**" />
     <Content Remove="ChatChallange.Repository\**" />
     <Content Remove="ChatChallange.Service\**" />
+    <Content Remove="ChatChallange.Test\**" />
     <EmbeddedResource Remove="ChatChallange.Domain\**" />
     <EmbeddedResource Remove="ChatChallange.Repository\**" />
     <EmbeddedResource Remove="ChatChallange.Service\**" />
+    <EmbeddedResource Remove="ChatChallange.Test\**" />
     <None Remove="ChatChallange.Domain\**" />
     <None Remove="ChatChallange.Repository\**" />
     <None Remove="ChatChallange.Service\**" />
+    <None Remove="ChatChallange.Test\**" />
   </ItemGroup>
 
   <ItemGroup>

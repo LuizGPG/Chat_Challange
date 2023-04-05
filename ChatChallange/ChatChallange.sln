@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatChallange", "ChatChalla
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatChallange.Service", "ChatChallange.Service\ChatChallange.Service.csproj", "{98D08982-BBEB-4DD8-A0D3-712FE7587F83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatChallange.Repository", "ChatChallange.Repository\ChatChallange.Repository.csproj", "{9A2DEE94-1756-46AD-B00B-A8B34848F15C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatChallange.Repository", "ChatChallange.Repository\ChatChallange.Repository.csproj", "{9A2DEE94-1756-46AD-B00B-A8B34848F15C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatChallange.Domain", "ChatChallange.Domain\ChatChallange.Domain.csproj", "{45F8D3ED-E926-47DC-AA22-246B71D5F790}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatChallange.Domain", "ChatChallange.Domain\ChatChallange.Domain.csproj", "{45F8D3ED-E926-47DC-AA22-246B71D5F790}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatChallange.Test", "ChatChallange.Test\ChatChallange.Test.csproj", "{84D23135-0A54-44EB-B74A-83D6979D378B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{45F8D3ED-E926-47DC-AA22-246B71D5F790}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45F8D3ED-E926-47DC-AA22-246B71D5F790}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45F8D3ED-E926-47DC-AA22-246B71D5F790}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D23135-0A54-44EB-B74A-83D6979D378B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D23135-0A54-44EB-B74A-83D6979D378B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D23135-0A54-44EB-B74A-83D6979D378B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D23135-0A54-44EB-B74A-83D6979D378B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
