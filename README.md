@@ -9,6 +9,10 @@ O foco foi atender os pontos solicitados com clareza no codigo e também facilit
 · Use identidade .NET para autenticação de usuários - :white_check_mark:<br/>
 · Lidar com mensagens que não são compreendidas ou quaisquer exceções levantadas dentro do bot.:white_check_mark:<br/>
 
+<h3>Code coverage</h3>
+
+![image](https://user-images.githubusercontent.com/14313148/230135091-31bdcf8b-cbac-40cb-bbf6-d04cf1541f33.png)
+
 <h2>Como executar o projeto</h2>
 
 Para esse projeto utilizei a base de dados SQLServer pois alem da utilização tambem pode ser escalada facilmente.
@@ -22,3 +26,11 @@ Após isso será necessário atualizar a base. Executar os scripts:<br/>
 
 Agora será necessário instanciar um container para o RabbitMQ. <strong>Obs</strong>: Necessário ter o Docker instalado.<br/><br/>
 <strong>docker run -d --hostname rabbitserver --name rabbitmq-server -p 15672:15672 -p 5672:5672 rabbitmq:3-management</strong><br/>
+
+<h2> Poderações finais </h2>
+
+Quero agradecer a oportunidade de realizar o teste e o carisma que tiveram na entrevista.
+Espero ter feito um projeto bom suficiente para embarcar nessa jornada com vocês para aprender muito e evoluir profissionalmente.
+Também gostaria muito de um feedback independe de qual seja.
+
+Obrigado
