@@ -27,6 +27,11 @@
             mensagemContainer.innerHTML += message;
         });
 
+        connection.on("ReceiveAllMessages", function (message) {
+            var mensagemContainer = document.getElementById("mensagemContainer");
+            mensagemContainer.innerHTML = message;
+        });
+
         connection.start().then(function () {
             connection.invoke("LoadChat").catch(function (err) {
                 return console.error(err.toString());
