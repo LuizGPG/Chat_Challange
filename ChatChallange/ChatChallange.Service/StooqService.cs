@@ -1,4 +1,5 @@
 ﻿using ChatChallange.Service.Interface;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,6 +10,14 @@ namespace ChatChallange.Service
     {
         private const string NotFound = "Não foi encontrado valor para o codigo enviado!";
         private const string Url = "https://stooq.com/";
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<StooqService> _logger;
+
+        public StooqService(HttpClient httpClient, ILogger<StooqService> logger)
+        {
+            _httpClient = httpClient;
+            _logger = logger;
+        }
 
         public async Task<string> CallEndpointStooq(string message)
         {
@@ -24,31 +33,27 @@ namespace ChatChallange.Service
             return NotFound;
         }
 
-        private static async Task<string> CallApi(string message)
+        private async Task<string> CallApi(string message)
         {
             try
             {
-                using (var client = new HttpClient())
+                _httpClient.BaseAddress = new Uri(Url);
+                HttpResponseMessage response = await _httpClient.GetAsync("q/l/?s=" + message + "&f=sd2t2ohlcv&h&e=csv");
+
+                if (response.IsSuccessStatusCode)
                 {
-                    client.BaseAddress = new Uri(Url);
-
-                    HttpResponseMessage response = await client.GetAsync("q/l/?s=" + message + "&f=sd2t2ohlcv&h&e=csv");
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        string data = await response.Content.ReadAsStringAsync();
-                        return data;
-                    }
-                    else
-                    {
-                        throw new Exception($"Failed to call"+Url+": {response.ReasonPhrase}");
-                    }
+                    string data = await response.Content.ReadAsStringAsync();
+                    return data;
+                }
+                else
+                {
+                    throw new Exception($"Failed to call" + Url + ": {response.ReasonPhrase}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                throw ex;
+                _logger.LogError("Error trying CallApi", ex.Message);
+                throw;
             }
         }
     }

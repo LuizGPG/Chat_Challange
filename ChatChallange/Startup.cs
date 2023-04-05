@@ -34,7 +34,6 @@ namespace ChatChallange
               options.UseSqlServer(_configuration.GetConnectionString("IdentityConnection"))
               .EnableSensitiveDataLogging(true));
 
-
             IocConfig(services);
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -42,7 +41,6 @@ namespace ChatChallange
             
             services.AddAuthorization(options =>
             {
-                // By default, all incoming requests will be authorized according to the default policy
                 options.FallbackPolicy = options.DefaultPolicy;
             });
 
@@ -60,8 +58,6 @@ namespace ChatChallange
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            //app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -70,7 +66,6 @@ namespace ChatChallange
                 endpoints.MapRazorPages();
                 endpoints.MapHub<ChatHub>("/ChatHub");
                 endpoints.MapControllers();
-
             });
         }
 
@@ -80,6 +75,7 @@ namespace ChatChallange
             services.AddScoped<IStooqService, StooqService>();
             services.AddScoped<IQueueService, QueueService>();
             services.AddScoped<IUserChatService, UserChatService>();
+            services.AddHttpClient<StooqService>();
 
             // repos
             services.AddScoped<IUserChatRepository, UserChatRepository>();
