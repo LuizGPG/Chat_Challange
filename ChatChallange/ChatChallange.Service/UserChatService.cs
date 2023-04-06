@@ -10,15 +10,18 @@ namespace ChatChallange.Service
 {
     public class UserChatService : IUserChatService
     {
-        private readonly IQueueService _queueService;
+        private readonly IConsumerUserChat _consumerUserChat;
+        private readonly IPublisherUserChat _publisherUserChat;
         private readonly IUserChatRepository _userChatRepository;
         private readonly ILogger<UserChatService> _logger;
 
-        public UserChatService(IUserChatRepository userChatRepository, IQueueService queueService, ILogger<UserChatService> logger)
+        public UserChatService(IUserChatRepository userChatRepository, IConsumerUserChat consumerUserChat, 
+            IPublisherUserChat publisherUserChat, ILogger<UserChatService> logger)
         {
             _userChatRepository = userChatRepository;
-            _queueService = queueService;
             _logger = logger;
+            _consumerUserChat = consumerUserChat;
+            _publisherUserChat = publisherUserChat;
         }
 
         public async Task<ICollection<UserChat>> GetAll()
@@ -36,7 +39,7 @@ namespace ChatChallange.Service
 
         public UserChat GetUserChatQueue(string user)
         {
-            var userChat = _queueService.ConsumeAnwserByUser(user);
+            var userChat = _consumerUserChat.ConsumeAnwserByUser(user);
             return userChat;
         }
 
@@ -48,7 +51,7 @@ namespace ChatChallange.Service
 
                 if (userChat.Anwser != string.Empty)
                 {
-                    _queueService.InsertAnwser(userChat);
+                    _publisherUserChat.InsertAnwser(userChat);
                 }
                 return true;
             }

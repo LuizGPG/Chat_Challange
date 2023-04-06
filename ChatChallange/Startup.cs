@@ -73,7 +73,8 @@ namespace ChatChallange
         {
             // services
             services.AddScoped<IStooqService, StooqService>();
-            services.AddScoped<IQueueService, QueueService>();
+            services.AddScoped<IPublisherUserChat, PublisherUserChat>();
+            services.AddScoped<IConsumerUserChat, ConsumerUserChat>();
             services.AddScoped<IUserChatService, UserChatService>();
             services.AddHttpClient<StooqService>();
 
