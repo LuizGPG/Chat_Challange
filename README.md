@@ -34,11 +34,3 @@ Com o projeto executando você caira em uma tela de login, caso nao possua conta
 ![image](https://user-images.githubusercontent.com/14313148/230154565-63e09533-a488-4ecd-8d93-8549a25835c9.png)
 
 Registre sua conta e após isso faça login.
-
-<h2> Ponderações finais </h2>
-
-Quero agradecer a oportunidade de realizar o teste e o carisma que tiveram na entrevista.
-Espero ter feito um projeto bom suficiente para embarcar nessa jornada com vocês para aprender muito e evoluir profissionalmente.
-Também gostaria muito de um feedback independe de qual seja.
-
-Obrigado
